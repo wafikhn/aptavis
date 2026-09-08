@@ -1,0 +1,16 @@
+embed-server --std-out=echo
+
+/subsystem=datasources/jdbc-driver=postgresql:add( \
+    driver-name=postgresql, \
+    driver-module-name=org.postgresql, \
+    driver-xa-datasource-class-name=org.postgresql.xa.PGXADataSource)
+
+/subsystem=datasources/data-source=ProjectTrackerDS:add( \
+    jndi-name="java:jboss/datasources/ProjectTrackerDS", \
+    driver-name=postgresql, \
+    connection-url="jdbc:postgresql://${env.POSTGRES_HOST:dpg-dag1l20n74is73c5227g-a}:5432/${env.POSTGRES_DB:projecttracker}", \
+    user-name="${env.POSTGRES_USER:postgres}", \
+    password="${env.POSTGRES_PASSWORD:postgres}", \
+    enabled=true)
+
+stop-embedded-server
