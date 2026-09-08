@@ -25,7 +25,8 @@ public class RestApplication extends Application {
     public Set<Class<?>> getClasses() {
         return Set.of(
             ProjectApplication.class,
-            TaskApplication.class
+            TaskApplication.class,
+            JacksonObjectMapperProvider.class
         );
     }
 }
