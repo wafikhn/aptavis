@@ -11,5 +11,5 @@ RUN mvn clean package -pl aptavis-backend -am -DskipTests
 
 # Stage 2: Deploy to WildFly 32
 FROM quay.io/wildfly/wildfly:32.0.1.Final-jdk21
-COPY --from=build /app/aptavis-backend/target/aptavis-backend.war /opt/jboss/wildfly/standalone/deployments/
+COPY --from=build /app/aptavis-backend/target/aptavis-backend.war /opt/jboss/wildfly/standalone/deployments/ROOT.war
 EXPOSE 8080
