@@ -11,12 +11,12 @@ import java.util.Set;
 @DataSourceDefinition(
     name = "java:jboss/datasources/ProjectTrackerDS",
     className = "org.postgresql.ds.PGSimpleDataSource",
-    serverName = "${env.POSTGRES_HOST:dpg-dag1l20n74is73c5227g-a}",
+    serverName = "dpg-dag1l20n74is73c5227g-a",
     portNumber = 5432,
-    databaseName = "${env.POSTGRES_DB:projecttracker_ctuo}",
-    user = "${env.POSTGRES_USER:wafi}",
-    password = "${env.POSTGRES_PASSWORD:5Cu4AG8W66PDP4B4SkNS3xu8zDQ7kXI1}",
-    url = "jdbc:postgresql://${env.POSTGRES_HOST:dpg-dag1l20n74is73c5227g-a}:5432/${env.POSTGRES_DB:projecttracker_ctuo}"
+    databaseName = "projecttracker_ctuo",
+    user = "wafi",
+    password = "5Cu4AG8W66PDP4B4SkNS3xu8zDQ7kXI1",
+    url = "jdbc:postgresql://dpg-dag1l20n74is73c5227g-a:5432/projecttracker_ctuo"
 )
 @ApplicationPath("/rest")
 public class RestApplication extends Application {
