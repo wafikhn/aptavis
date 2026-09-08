@@ -18,5 +18,30 @@ services:
       timeout: 5s
       retries: 5
 
+  backend:
+    build:
+      context: .
+      dockerfile: aptavis-backend/Dockerfile
+    container_name: backend_aptavis
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: .
+      dockerfile: aptavis-frontend/Dockerfile
+    container_name: frontend_aptavis
+    restart: always
+    ports:
+      - "8081:8080"
+    environment:
+      - BACKEND_API_URL=http://backend:8080/aptavis-backend/rest
+    depends_on:
+      - backend
+
 volumes:
   postgres_data:
