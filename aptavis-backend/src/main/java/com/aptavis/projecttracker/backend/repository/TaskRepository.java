@@ -46,7 +46,9 @@ public class TaskRepository {
                     task.getName(),
                     task.getStatus() != null ? task.getStatus() : TaskStatus.DRAFT,
                     task.getWeight() != null ? task.getWeight() : TaskConstants.DEFAULT_TASK_WEIGHT,
-                    task.getProject()
+                    task.getProject(),
+                    task.getParentTask(),
+                    task.getSubtasks()
             );
             em.persist(taskWithId);
             return taskWithId;

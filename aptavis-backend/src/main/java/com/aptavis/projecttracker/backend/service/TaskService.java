@@ -109,6 +109,12 @@ public class TaskService {
         if (project.getTasks() != null && !project.getTasks().contains(savedTask)) {
             project.getTasks().add(savedTask);
         }
+        if (savedTask.getParentTask() != null) {
+            Task parent = savedTask.getParentTask();
+            if (parent.getSubtasks() != null && !parent.getSubtasks().contains(savedTask)) {
+                parent.getSubtasks().add(savedTask);
+            }
+        }
         projectService.recalculateProjectMetrics(project);
         projectRepository.save(project);
     }
