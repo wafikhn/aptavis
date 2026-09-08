@@ -1,0 +1,17 @@
+{
+  "frontendFolder": "/mnt/data/code/aptavis/aptavis-frontend/frontend",
+  "themeFolder": "themes",
+  "themeResourceFolder": "/mnt/data/code/aptavis/aptavis-frontend/frontend/generated/jar-resources",
+  "staticOutput": "/mnt/data/code/aptavis/aptavis-frontend/target/classes/META-INF/VAADIN/webapp/VAADIN/static",
+  "generatedFolder": "generated",
+  "statsOutput": "/mnt/data/code/aptavis/aptavis-frontend/target/classes/META-INF/VAADIN/config",
+  "frontendBundleOutput": "/mnt/data/code/aptavis/aptavis-frontend/target/classes/META-INF/VAADIN/webapp",
+  "devBundleOutput": "/mnt/data/code/aptavis/aptavis-frontend/target/dev-bundle/webapp",
+  "devBundleStatsOutput": "/mnt/data/code/aptavis/aptavis-frontend/target/dev-bundle/config",
+  "jarResourcesFolder": "/mnt/data/code/aptavis/aptavis-frontend/frontend/generated/jar-resources",
+  "themeName": "",
+  "clientServiceWorkerSource": "/mnt/data/code/aptavis/aptavis-frontend/target/sw.ts",
+  "pwaEnabled": false,
+  "offlineEnabled": false,
+  "offlinePath": "'offline.html'"
+}

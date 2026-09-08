@@ -1,0 +1,14 @@
+com/aptavis/projecttracker/frontend/model/ProjectModel.class
+com/aptavis/projecttracker/frontend/model/TaskModel.class
+com/aptavis/projecttracker/frontend/client/ProjectApiClient$1.class
+com/aptavis/projecttracker/frontend/constant/UiTextConstants.class
+com/aptavis/projecttracker/frontend/model/ProjectStatus.class
+com/aptavis/projecttracker/frontend/ui/MainView.class
+com/aptavis/projecttracker/frontend/client/ProjectApiClient.class
+com/aptavis/projecttracker/frontend/ui/ProjectCard.class
+com/aptavis/projecttracker/frontend/ui/ProjectTaskDialog$Mode.class
+com/aptavis/projecttracker/frontend/client/RestEndpoint.class
+com/aptavis/projecttracker/frontend/constant/ApiConstants.class
+com/aptavis/projecttracker/frontend/model/TaskStatus.class
+com/aptavis/projecttracker/frontend/constant/NotificationConstants.class
+com/aptavis/projecttracker/frontend/ui/ProjectTaskDialog.class

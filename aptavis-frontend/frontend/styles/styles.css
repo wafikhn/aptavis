@@ -1,0 +1,78 @@
+.main-container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.app-subtitle {
+  margin-top: 0.25rem;
+  margin-bottom: 1rem;
+  color: var(--lumo-secondary-text-color);
+}
+
+.search-field {
+  width: 280px;
+}
+
+.empty-state {
+  border: 2px dashed var(--lumo-contrast-20pct);
+  border-radius: 12px;
+  margin-top: 2rem;
+}
+.empty-state .empty-state-icon {
+  font-size: 3rem;
+  color: var(--lumo-disabled-text-color);
+}
+.empty-state .empty-state-msg {
+  color: var(--lumo-secondary-text-color);
+}
+
+.dialog-title {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+.project-card {
+  background-color: var(--lumo-base-color);
+  border: 1px solid var(--lumo-contrast-10pct);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease-in-out;
+  margin-bottom: 1rem;
+  width: 100%;
+}
+.project-card:hover {
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+.project-card .card-title {
+  margin: 0;
+}
+.project-card .progress-text {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--lumo-secondary-text-color);
+}
+.project-card .progress-layout {
+  margin-top: 0.25rem;
+  margin-bottom: 0.75rem;
+}
+.project-card .empty-task-span {
+  font-style: italic;
+  color: var(--lumo-disabled-text-color);
+  font-size: 0.85rem;
+}
+
+.task-row {
+  padding: 0.4rem 0.8rem;
+  background-color: var(--lumo-contrast-5pct);
+  border-radius: 8px;
+  width: 100%;
+}
+.task-row .task-plus-icon {
+  font-weight: bold;
+  color: var(--lumo-primary-color);
+}
+.task-row .task-name {
+  font-weight: 500;
+}
+
+/*# sourceMappingURL=styles.css.map */

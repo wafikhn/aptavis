@@ -1,0 +1,24 @@
+# JBoss CLI script to configure PostgreSQL Datasource in WildFly 32
+# Execute with: $WILDFLY_HOME/bin/jboss-cli.sh --connect --file=configure-datasource.cli
+
+# 1. Add PostgreSQL Module
+module add --name=org.postgresql --resources=postgresql-42.7.2.jar --dependencies=javax.api,javax.transaction.api
+
+# 2. Register Driver
+/subsystem=datasources/jdbc-driver=postgresql:add(driver-name=postgresql,driver-module-name=org.postgresql,driver-xa-datasource-class-name=org.postgresql.xa.PGXADataSource)
+
+# 3. Add JTA Datasource
+data-source add \
+    --name=ProjectTrackerDS \
+    --jndi-name=java:jboss/datasources/ProjectTrackerDS \
+    --driver-name=postgresql \
+    --connection-url=jdbc:postgresql://localhost:5432/projecttracker \
+    --user-name=postgres \
+    --password=postgres \
+    --validate-on-match=true \
+    --background-validation=false \
+    --valid-connection-checker-class-name=org.jboss.jca.adapters.jdbc.extensions.postgres.PostgreSQLValidConnectionChecker \
+    --exception-sorter-class-name=org.jboss.jca.adapters.jdbc.extensions.postgres.PostgreSQLExceptionSorter
+
+# 4. Enable Datasource
+data-source enable --name=ProjectTrackerDS

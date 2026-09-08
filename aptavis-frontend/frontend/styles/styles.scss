@@ -1,0 +1,95 @@
+// Aptavis Project Tracker - SCSS Stylesheet
+
+$border-radius-card: 12px;
+$border-radius-row: 8px;
+$transition-speed: 0.2s ease-in-out;
+
+// Main View Layout Styles
+.main-container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.app-subtitle {
+  margin-top: 0.25rem;
+  margin-bottom: 1rem;
+  color: var(--lumo-secondary-text-color);
+}
+
+.search-field {
+  width: 280px;
+}
+
+.empty-state {
+  border: 2px dashed var(--lumo-contrast-20pct);
+  border-radius: $border-radius-card;
+  margin-top: 2rem;
+
+  .empty-state-icon {
+    font-size: 3rem;
+    color: var(--lumo-disabled-text-color);
+  }
+
+  .empty-state-msg {
+    color: var(--lumo-secondary-text-color);
+  }
+}
+
+// Dialog Styles
+.dialog-title {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+// Project Card Styles
+.project-card {
+  background-color: var(--lumo-base-color);
+  border: 1px solid var(--lumo-contrast-10pct);
+  border-radius: $border-radius-card;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: all $transition-speed;
+  margin-bottom: 1rem;
+  width: 100%;
+
+  &:hover {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  }
+
+  .card-title {
+    margin: 0;
+  }
+
+  .progress-text {
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--lumo-secondary-text-color);
+  }
+
+  .progress-layout {
+    margin-top: 0.25rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .empty-task-span {
+    font-style: italic;
+    color: var(--lumo-disabled-text-color);
+    font-size: 0.85rem;
+  }
+}
+
+// Task Row Styles
+.task-row {
+  padding: 0.4rem 0.8rem;
+  background-color: var(--lumo-contrast-5pct);
+  border-radius: $border-radius-row;
+  width: 100%;
+
+  .task-plus-icon {
+    font-weight: bold;
+    color: var(--lumo-primary-color);
+  }
+
+  .task-name {
+    font-weight: 500;
+  }
+}

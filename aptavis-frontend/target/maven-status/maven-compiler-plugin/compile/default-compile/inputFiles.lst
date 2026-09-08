@@ -1,0 +1,12 @@
+/mnt/data/code/aptavis/aptavis-frontend/src/main/java/com/aptavis/projecttracker/frontend/client/ProjectApiClient.java
+/mnt/data/code/aptavis/aptavis-frontend/src/main/java/com/aptavis/projecttracker/frontend/client/RestEndpoint.java
+/mnt/data/code/aptavis/aptavis-frontend/src/main/java/com/aptavis/projecttracker/frontend/constant/ApiConstants.java
+/mnt/data/code/aptavis/aptavis-frontend/src/main/java/com/aptavis/projecttracker/frontend/constant/NotificationConstants.java
+/mnt/data/code/aptavis/aptavis-frontend/src/main/java/com/aptavis/projecttracker/frontend/constant/UiTextConstants.java
+/mnt/data/code/aptavis/aptavis-frontend/src/main/java/com/aptavis/projecttracker/frontend/model/ProjectModel.java
+/mnt/data/code/aptavis/aptavis-frontend/src/main/java/com/aptavis/projecttracker/frontend/model/ProjectStatus.java
+/mnt/data/code/aptavis/aptavis-frontend/src/main/java/com/aptavis/projecttracker/frontend/model/TaskModel.java
+/mnt/data/code/aptavis/aptavis-frontend/src/main/java/com/aptavis/projecttracker/frontend/model/TaskStatus.java
+/mnt/data/code/aptavis/aptavis-frontend/src/main/java/com/aptavis/projecttracker/frontend/ui/MainView.java
+/mnt/data/code/aptavis/aptavis-frontend/src/main/java/com/aptavis/projecttracker/frontend/ui/ProjectCard.java
+/mnt/data/code/aptavis/aptavis-frontend/src/main/java/com/aptavis/projecttracker/frontend/ui/ProjectTaskDialog.java

@@ -1,0 +1,24 @@
+<!-- 
+  Paste this snippet into WildFly 32 standalone.xml / standalone-full.xml 
+  inside the <subsystem xmlns="urn:jboss:domain:datasources:7.1"> element:
+-->
+
+<datasources>
+    <datasource jndi-name="java:jboss/datasources/ProjectTrackerDS" pool-name="ProjectTrackerDS" enabled="true" use-java-context="true">
+        <connection-url>jdbc:postgresql://localhost:5432/projecttracker</connection-url>
+        <driver>postgresql</driver>
+        <security>
+            <user-name>postgres</user-name>
+            <password>postgres</password>
+        </security>
+        <validation>
+            <valid-connection-checker class-name="org.jboss.jca.adapters.jdbc.extensions.postgres.PostgreSQLValidConnectionChecker"/>
+            <exception-sorter class-name="org.jboss.jca.adapters.jdbc.extensions.postgres.PostgreSQLExceptionSorter"/>
+        </validation>
+    </datasource>
+    <drivers>
+        <driver name="postgresql" module="org.postgresql">
+            <xa-datasource-class>org.postgresql.xa.PGXADataSource</xa-datasource-class>
+        </driver>
+    </drivers>
+</datasources>
