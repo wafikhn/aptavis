@@ -1,5 +1,6 @@
 package com.aptavis.projecttracker.frontend.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.time.LocalDate;
@@ -11,7 +12,9 @@ public record ProjectModel(
     String name,
     ProjectStatus status,
     double completionProgress,
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     LocalDate startDate,
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     LocalDate endDate,
     List<TaskModel> tasks
 ) {
