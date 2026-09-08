@@ -1,6 +1,7 @@
 package com.aptavis.projecttracker.frontend.ui;
 
 import com.aptavis.projecttracker.frontend.client.ProjectApiClient;
+import com.aptavis.projecttracker.frontend.client.RestEndpoint;
 import com.aptavis.projecttracker.frontend.constant.NotificationConstants;
 import com.aptavis.projecttracker.frontend.constant.UiTextConstants;
 import com.aptavis.projecttracker.frontend.model.ProjectModel;
@@ -9,6 +10,7 @@ import com.aptavis.projecttracker.frontend.model.TaskStatus;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Span;
@@ -20,7 +22,9 @@ import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextField;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ProjectTaskDialog extends Dialog {
 
@@ -38,8 +42,11 @@ public class ProjectTaskDialog extends Dialog {
     private final H3 title = new H3();
 
     private final TextField projectNameField = new TextField("Nama Project");
+    private final DatePicker startDatePicker = new DatePicker("Tanggal Mulai");
+    private final DatePicker endDatePicker = new DatePicker("Tanggal Selesai");
 
     private final ComboBox<ProjectModel> projectComboBox = new ComboBox<>("Project");
+    private final ComboBox<TaskModel> parentTaskComboBox = new ComboBox<>("Parent Task (Opsional)");
     private final TextField taskNameField = new TextField("Nama Task");
     private final Select<TaskStatus> taskStatusSelect = new Select<>();
     private final IntegerField taskWeightField = new IntegerField("Bobot (Weight)");
@@ -52,7 +59,7 @@ public class ProjectTaskDialog extends Dialog {
         this.apiClient = apiClient;
         this.onSaveCallback = onSaveCallback;
 
-        setWidth("450px");
+        setWidth("480px");
         setCloseOnOutsideClick(true);
 
         initUI();
@@ -64,9 +71,18 @@ public class ProjectTaskDialog extends Dialog {
         projectNameField.setWidthFull();
         projectNameField.setPlaceholder(UiTextConstants.PLACEHOLDER_PROJECT_NAME);
 
+        startDatePicker.setWidthFull();
+        endDatePicker.setWidthFull();
+
         projectComboBox.setWidthFull();
         projectComboBox.setItemLabelGenerator(ProjectModel::name);
         projectComboBox.setPlaceholder(UiTextConstants.PLACEHOLDER_PROJECT_SELECT);
+        projectComboBox.addValueChangeListener(e -> updateParentTaskOptions(e.getValue()));
+
+        parentTaskComboBox.setWidthFull();
+        parentTaskComboBox.setItemLabelGenerator(t -> t.name() + " (" + t.status() + ")");
+        parentTaskComboBox.setPlaceholder("Pilih Parent Task (jika ini subtask)");
+        parentTaskComboBox.setClearButtonVisible(true);
 
         taskNameField.setWidthFull();
         taskNameField.setPlaceholder(UiTextConstants.PLACEHOLDER_TASK_NAME);
@@ -93,7 +109,18 @@ public class ProjectTaskDialog extends Dialog {
         actions.setWidthFull();
         actions.setJustifyContentMode(HorizontalLayout.JustifyContentMode.BETWEEN);
 
-        VerticalLayout layout = new VerticalLayout(title, projectNameField, projectComboBox, taskNameField, taskStatusSelect, taskWeightField, actions);
+        VerticalLayout layout = new VerticalLayout(
+                title,
+                projectNameField,
+                startDatePicker,
+                endDatePicker,
+                projectComboBox,
+                parentTaskComboBox,
+                taskNameField,
+                taskStatusSelect,
+                taskWeightField,
+                actions
+        );
         layout.setPadding(false);
         layout.setSpacing(true);
 
@@ -109,7 +136,14 @@ public class ProjectTaskDialog extends Dialog {
         projectNameField.clear();
         projectNameField.setVisible(true);
 
+        startDatePicker.clear();
+        startDatePicker.setVisible(true);
+
+        endDatePicker.clear();
+        endDatePicker.setVisible(true);
+
         projectComboBox.setVisible(false);
+        parentTaskComboBox.setVisible(false);
         taskNameField.setVisible(false);
         taskStatusSelect.setVisible(false);
         taskWeightField.setVisible(false);
@@ -127,7 +161,14 @@ public class ProjectTaskDialog extends Dialog {
         projectNameField.setValue(project.name() != null ? project.name() : "");
         projectNameField.setVisible(true);
 
+        startDatePicker.setValue(project.startDate());
+        startDatePicker.setVisible(true);
+
+        endDatePicker.setValue(project.endDate());
+        endDatePicker.setVisible(true);
+
         projectComboBox.setVisible(false);
+        parentTaskComboBox.setVisible(false);
         taskNameField.setVisible(false);
         taskStatusSelect.setVisible(false);
         taskWeightField.setVisible(false);
@@ -146,14 +187,11 @@ public class ProjectTaskDialog extends Dialog {
 
         title.setText("Tambah Task Baru");
         projectNameField.setVisible(false);
+        startDatePicker.setVisible(false);
+        endDatePicker.setVisible(false);
 
         projectComboBox.setVisible(true);
-        if (defaultProject != null) {
-            projectComboBox.setValue(defaultProject);
-        } else if (!allProjects.isEmpty()) {
-            projectComboBox.setValue(allProjects.get(0));
-        }
-
+        parentTaskComboBox.setVisible(true);
         taskNameField.clear();
         taskNameField.setVisible(true);
 
@@ -162,6 +200,12 @@ public class ProjectTaskDialog extends Dialog {
 
         taskWeightField.setValue(1);
         taskWeightField.setVisible(true);
+
+        if (defaultProject != null) {
+            projectComboBox.setValue(defaultProject);
+        } else if (!allProjects.isEmpty()) {
+            projectComboBox.setValue(allProjects.get(0));
+        }
 
         deleteButton.setVisible(false);
         open();
@@ -177,13 +221,19 @@ public class ProjectTaskDialog extends Dialog {
 
         title.setText("Edit Task: " + task.name());
         projectNameField.setVisible(false);
+        startDatePicker.setVisible(false);
+        endDatePicker.setVisible(false);
 
         projectComboBox.setVisible(true);
+        parentTaskComboBox.setVisible(true);
         if (task.projectId() != null) {
             allProjects.stream()
                     .filter(p -> p.projectId() != null && p.projectId().equals(task.projectId()))
                     .findFirst()
-                    .ifPresent(projectComboBox::setValue);
+                    .ifPresent(p -> {
+                        projectComboBox.setValue(p);
+                        updateParentTaskOptions(p);
+                    });
         }
 
         taskNameField.setValue(task.name() != null ? task.name() : "");
@@ -199,6 +249,42 @@ public class ProjectTaskDialog extends Dialog {
         open();
     }
 
+    private void updateParentTaskOptions(ProjectModel project) {
+        if (project == null || project.tasks() == null) {
+            parentTaskComboBox.setItems(List.of());
+            parentTaskComboBox.clear();
+            return;
+        }
+
+        List<TaskModel> allTasksInProject = new ArrayList<>();
+        collectAllTasks(project.tasks(), allTasksInProject);
+
+        List<TaskModel> validParents = allTasksInProject.stream()
+                .filter(t -> currentTask == null || currentTask.taskId() == null || !currentTask.taskId().equals(t.taskId()))
+                .collect(Collectors.toList());
+
+        parentTaskComboBox.setItems(validParents);
+
+        if (currentTask != null && currentTask.parentTaskId() != null) {
+            validParents.stream()
+                    .filter(t -> t.taskId() != null && t.taskId().equals(currentTask.parentTaskId()))
+                    .findFirst()
+                    .ifPresent(parentTaskComboBox::setValue);
+        } else {
+            parentTaskComboBox.clear();
+        }
+    }
+
+    private void collectAllTasks(List<TaskModel> tasks, List<TaskModel> result) {
+        if (tasks == null) return;
+        for (TaskModel t : tasks) {
+            result.add(t);
+            if (t.subtasks() != null && !t.subtasks().isEmpty()) {
+                collectAllTasks(t.subtasks(), result);
+            }
+        }
+    }
+
     private void save() {
         if (mode == Mode.PROJECT) {
             String name = projectNameField.getValue();
@@ -212,14 +298,19 @@ public class ProjectTaskDialog extends Dialog {
                     name.trim(),
                     currentProject.status(),
                     currentProject.completionProgress(),
+                    startDatePicker.getValue(),
+                    endDatePicker.getValue(),
                     currentProject.tasks()
             );
-            ProjectModel saved = apiClient.saveProject(projectToSave);
-            if (saved != null) {
+            RestEndpoint.ApiResponse<ProjectModel> res = apiClient.saveProjectWithResponse(projectToSave);
+            if (res.isSuccess()) {
                 Notification n = Notification.show(NotificationConstants.NOTIF_PROJECT_SAVED, 3000, Notification.Position.BOTTOM_END);
                 n.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+                close();
+                if (onSaveCallback != null) onSaveCallback.run();
             } else {
-                Notification n = Notification.show(NotificationConstants.NOTIF_SAVE_FAILED, 5000, Notification.Position.BOTTOM_END);
+                String msg = res.getError() != null && !res.getError().isBlank() ? res.getError() : NotificationConstants.NOTIF_SAVE_FAILED;
+                Notification n = Notification.show(msg, 6000, Notification.Position.BOTTOM_END);
                 n.addThemeVariants(NotificationVariant.LUMO_ERROR);
             }
         } else {
@@ -227,6 +318,7 @@ public class ProjectTaskDialog extends Dialog {
             String name = taskNameField.getValue();
             Integer weight = taskWeightField.getValue();
             TaskStatus status = taskStatusSelect.getValue();
+            TaskModel selectedParent = parentTaskComboBox.getValue();
 
             if (selectedProject == null) {
                 Notification n = Notification.show(NotificationConstants.NOTIF_SELECT_PROJECT_FIRST, 3000, Notification.Position.BOTTOM_END);
@@ -239,27 +331,29 @@ public class ProjectTaskDialog extends Dialog {
                 return;
             }
 
+            Long parentId = selectedParent != null ? selectedParent.taskId() : null;
+
             TaskModel taskToSave = new TaskModel(
                     currentTask.taskId(),
                     name.trim(),
                     status,
                     weight,
-                    selectedProject.projectId()
+                    selectedProject.projectId(),
+                    parentId,
+                    currentTask.subtasks()
             );
 
-            TaskModel saved = apiClient.saveTask(taskToSave);
-            if (saved != null) {
+            RestEndpoint.ApiResponse<TaskModel> res = apiClient.saveTaskWithResponse(taskToSave);
+            if (res.isSuccess()) {
                 Notification n = Notification.show(NotificationConstants.NOTIF_TASK_SAVED, 3000, Notification.Position.BOTTOM_END);
                 n.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+                close();
+                if (onSaveCallback != null) onSaveCallback.run();
             } else {
-                Notification n = Notification.show(NotificationConstants.NOTIF_SAVE_FAILED, 5000, Notification.Position.BOTTOM_END);
+                String msg = res.getError() != null && !res.getError().isBlank() ? res.getError() : NotificationConstants.NOTIF_SAVE_FAILED;
+                Notification n = Notification.show(msg, 6000, Notification.Position.BOTTOM_END);
                 n.addThemeVariants(NotificationVariant.LUMO_ERROR);
             }
-        }
-
-        close();
-        if (onSaveCallback != null) {
-            onSaveCallback.run();
         }
     }
 

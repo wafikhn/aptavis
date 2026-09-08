@@ -2,6 +2,7 @@ package com.aptavis.projecttracker.frontend.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -10,9 +11,11 @@ public record ProjectModel(
     String name,
     ProjectStatus status,
     double completionProgress,
+    LocalDate startDate,
+    LocalDate endDate,
     List<TaskModel> tasks
 ) {
     public ProjectModel(String name) {
-        this(null, name, ProjectStatus.DRAFT, 0.0, List.of());
+        this(null, name, ProjectStatus.DRAFT, 0.0, null, null, List.of());
     }
 }

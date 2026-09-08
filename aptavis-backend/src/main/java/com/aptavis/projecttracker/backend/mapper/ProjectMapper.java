@@ -13,13 +13,18 @@ public class ProjectMapper {
     public static ProjectModel toModel(Project project) {
         if (project == null) return null;
         List<TaskModel> taskModels = project.getTasks() != null ?
-                project.getTasks().stream().map(TaskMapper::toModel).collect(Collectors.toList()) :
+                project.getTasks().stream()
+                        .filter(t -> t.getParentTask() == null)
+                        .map(TaskMapper::toModel)
+                        .collect(Collectors.toList()) :
                 new ArrayList<>();
         return new ProjectModel(
             project.getProjectId() != null ? project.getProjectId().getProjectId() : null,
             project.getName(),
             project.getStatus(),
             project.getCompletionProgress(),
+            project.getStartDate(),
+            project.getEndDate(),
             taskModels
         );
     }

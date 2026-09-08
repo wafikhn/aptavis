@@ -1,5 +1,6 @@
 com/aptavis/projecttracker/frontend/model/ProjectModel.class
 com/aptavis/projecttracker/frontend/model/TaskModel.class
+com/aptavis/projecttracker/frontend/client/RestEndpoint$ApiResponse.class
 com/aptavis/projecttracker/frontend/client/ProjectApiClient$1.class
 com/aptavis/projecttracker/frontend/constant/UiTextConstants.class
 com/aptavis/projecttracker/frontend/model/ProjectStatus.class

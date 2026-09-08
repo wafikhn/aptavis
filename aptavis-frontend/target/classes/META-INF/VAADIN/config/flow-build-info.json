@@ -1,4 +1,17 @@
 {
-  "productionMode": true,
-  "eagerServerLoad": false
+  "productionMode": false,
+  "eagerServerLoad": false,
+  "npmFolder": "/mnt/data/code/aptavis/aptavis-frontend",
+  "node.version": "v20.11.1",
+  "node.download.root": "https://nodejs.org/dist/",
+  "frontendFolder": "/mnt/data/code/aptavis/aptavis-frontend/frontend",
+  "connect.javaSourceFolder": "/mnt/data/code/aptavis/aptavis-frontend/src/main/java",
+  "javaResourceFolder": "/mnt/data/code/aptavis/aptavis-frontend/src/main/resources",
+  "connect.applicationProperties": "/mnt/data/code/aptavis/aptavis-frontend/src/main/resources/application.properties",
+  "connect.openApiFile": "/mnt/data/code/aptavis/aptavis-frontend/target/generated-resources/openapi.json",
+  "project.frontend.generated": "/mnt/data/code/aptavis/aptavis-frontend/frontend/generated",
+  "pnpm.enable": false,
+  "bun.enable": false,
+  "require.home.node": false,
+  "build.folder": "target"
 }

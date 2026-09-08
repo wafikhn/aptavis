@@ -126,6 +126,48 @@ public abstract class RestEndpoint {
         return null;
     }
 
+    public static class ApiResponse<T> {
+        private final T data;
+        private final String error;
+        private final int statusCode;
+
+        public ApiResponse(T data, String error, int statusCode) {
+            this.data = data;
+            this.error = error;
+            this.statusCode = statusCode;
+        }
+
+        public boolean isSuccess() {
+            return statusCode >= 200 && statusCode < 300 && data != null;
+        }
+
+        public T getData() { return data; }
+        public String getError() { return error; }
+        public int getStatusCode() { return statusCode; }
+    }
+
+    protected <T> ApiResponse<T> postWithResponse(String path, Object body, Class<T> responseClass) {
+        try {
+            String fullUrl = buildFullUrl(path);
+            String json = objectMapper.writeValueAsString(body);
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(fullUrl))
+                    .header(ApiConstants.HEADER_CONTENT_TYPE, ApiConstants.MEDIA_TYPE_JSON)
+                    .header(ApiConstants.HEADER_ACCEPT, ApiConstants.MEDIA_TYPE_JSON)
+                    .POST(HttpRequest.BodyPublishers.ofString(json))
+                    .build();
+
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() == 200 || response.statusCode() == 201) {
+                T data = objectMapper.readValue(response.body(), responseClass);
+                return new ApiResponse<>(data, null, response.statusCode());
+            }
+            return new ApiResponse<>(null, response.body(), response.statusCode());
+        } catch (Exception e) {
+            return new ApiResponse<>(null, e.getMessage(), 500);
+        }
+    }
+
     protected boolean delete(String path) {
         try {
             String fullUrl = buildFullUrl(path);

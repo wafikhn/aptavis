@@ -19,6 +19,10 @@ public class ProjectApiClient extends RestEndpoint {
         return post(ApiConstants.ENDPOINT_PROJECTS, projectModel, ProjectModel.class);
     }
 
+    public ApiResponse<ProjectModel> saveProjectWithResponse(ProjectModel projectModel) {
+        return postWithResponse(ApiConstants.ENDPOINT_PROJECTS, projectModel, ProjectModel.class);
+    }
+
     public boolean deleteProject(Long projectId) {
         if (projectId == null) return false;
         return delete(ApiConstants.ENDPOINT_PROJECTS + "/" + projectId);
@@ -26,6 +30,10 @@ public class ProjectApiClient extends RestEndpoint {
 
     public TaskModel saveTask(TaskModel taskModel) {
         return post(ApiConstants.ENDPOINT_TASKS, taskModel, TaskModel.class);
+    }
+
+    public ApiResponse<TaskModel> saveTaskWithResponse(TaskModel taskModel) {
+        return postWithResponse(ApiConstants.ENDPOINT_TASKS, taskModel, TaskModel.class);
     }
 
     public boolean deleteTask(Long taskId) {

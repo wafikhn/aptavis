@@ -97,6 +97,12 @@ public class TaskService {
         if (model.weight() != null) {
             task.setWeight(model.weight());
         }
+        if (model.parentTaskId() != null) {
+            Task parent = taskRepository.findById(TaskId.of(model.parentTaskId())).orElse(null);
+            task.setParentTask(parent);
+        } else {
+            task.setParentTask(null);
+        }
     }
 
     private void syncProjectAndMetrics(Project project, Task savedTask) {

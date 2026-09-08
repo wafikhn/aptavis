@@ -56,8 +56,36 @@ public class ProjectService {
         if (!isValidProjectName(model)) {
             return Response.status(Response.Status.BAD_REQUEST).entity(ProjectConstants.ERROR_NAME_REQUIRED).build();
         }
+
+        if (model.startDate() != null && model.endDate() != null) {
+            if (model.startDate().isAfter(model.endDate())) {
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity("Tanggal mulai tidak boleh lebih setelah tanggal selesai!")
+                        .build();
+            }
+
+            for (Project existing : findAllProjects()) {
+                if (model.projectId() != null && existing.getProjectId() != null &&
+                        existing.getProjectId().getProjectId().equals(model.projectId())) {
+                    continue; // Skip current project being updated
+                }
+
+                if (existing.getStartDate() != null && existing.getEndDate() != null) {
+                    boolean overlaps = !model.startDate().isAfter(existing.getEndDate()) &&
+                            !model.endDate().isBefore(existing.getStartDate());
+                    if (overlaps) {
+                        String errorMsg = String.format("Jadwal project berbenturan dengan project '%s' (%s s/d %s)",
+                                existing.getName(), existing.getStartDate(), existing.getEndDate());
+                        return Response.status(Response.Status.BAD_REQUEST).entity(errorMsg).build();
+                    }
+                }
+            }
+        }
+
         Project project = resolveOrCreateProject(model);
         project.setName(model.name().trim());
+        project.setStartDate(model.startDate());
+        project.setEndDate(model.endDate());
 
         Project saved = saveProject(project);
         return Response.ok(ProjectMapper.toModel(saved)).build();

@@ -19,10 +19,13 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.progressbar.ProgressBar;
 
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.function.Consumer;
 
 public class ProjectCard extends VerticalLayout {
+
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     private final ProjectModel project;
     private final Consumer<ProjectModel> onEditProject;
@@ -61,6 +64,14 @@ public class ProjectCard extends VerticalLayout {
         H4 title = new H4(project.name());
         title.addClassName("card-title");
 
+        String scheduleText = formatSchedule(project);
+        Span dateSpan = new Span("🗓️ " + scheduleText);
+        dateSpan.addClassName("schedule-span");
+
+        VerticalLayout titleLayout = new VerticalLayout(title, dateSpan);
+        titleLayout.setPadding(false);
+        titleLayout.setSpacing(false);
+
         Span statusBadge = createProjectStatusBadge(project.status());
 
         Button addTaskBtn = new Button(UiTextConstants.BTN_TASK, VaadinIcon.PLUS.create());
@@ -86,7 +97,7 @@ public class ProjectCard extends VerticalLayout {
         HorizontalLayout headerRight = new HorizontalLayout(statusBadge, addTaskBtn, editProjectBtn, deleteProjectBtn);
         headerRight.setAlignItems(FlexComponent.Alignment.CENTER);
 
-        HorizontalLayout header = new HorizontalLayout(title, headerRight);
+        HorizontalLayout header = new HorizontalLayout(titleLayout, headerRight);
         header.setWidthFull();
         header.setJustifyContentMode(HorizontalLayout.JustifyContentMode.BETWEEN);
         header.setAlignItems(FlexComponent.Alignment.CENTER);
@@ -122,21 +133,32 @@ public class ProjectCard extends VerticalLayout {
             taskListLayout.add(emptySpan);
         } else {
             for (TaskModel task : project.tasks()) {
-                taskListLayout.add(createTaskRow(task));
+                renderTaskItem(task, taskListLayout, 0);
             }
         }
 
         add(taskListLayout);
     }
 
-    private HorizontalLayout createTaskRow(TaskModel task) {
-        Span taskPlusIcon = new Span("+ ");
-        taskPlusIcon.addClassName("task-plus-icon");
+    private void renderTaskItem(TaskModel task, VerticalLayout container, int depth) {
+        HorizontalLayout taskRow = createTaskRow(task, depth);
+        container.add(taskRow);
+
+        if (task.subtasks() != null && !task.subtasks().isEmpty()) {
+            for (TaskModel subtask : task.subtasks()) {
+                renderTaskItem(subtask, container, depth + 1);
+            }
+        }
+    }
+
+    private HorizontalLayout createTaskRow(TaskModel task, int depth) {
+        Span iconSpan = new Span(depth > 0 ? "↳ " : "+ ");
+        iconSpan.addClassName(depth > 0 ? "subtask-icon" : "task-plus-icon");
 
         Span taskName = new Span(task.name());
         taskName.addClassName("task-name");
 
-        HorizontalLayout left = new HorizontalLayout(taskPlusIcon, taskName);
+        HorizontalLayout left = new HorizontalLayout(iconSpan, taskName);
         left.setAlignItems(FlexComponent.Alignment.CENTER);
 
         Span statusBadge = createTaskStatusBadge(task.status());
@@ -168,7 +190,23 @@ public class ProjectCard extends VerticalLayout {
         row.setAlignItems(FlexComponent.Alignment.CENTER);
         row.addClassName("task-row");
 
+        if (depth > 0) {
+            row.getStyle().set("margin-left", (depth * 24) + "px");
+            row.getStyle().set("opacity", "0.95");
+        }
+
         return row;
+    }
+
+    private String formatSchedule(ProjectModel project) {
+        if (project.startDate() != null && project.endDate() != null) {
+            return project.startDate().format(DATE_FORMATTER) + " s/d " + project.endDate().format(DATE_FORMATTER);
+        } else if (project.startDate() != null) {
+            return "Mulai: " + project.startDate().format(DATE_FORMATTER);
+        } else if (project.endDate() != null) {
+            return "Selesai: " + project.endDate().format(DATE_FORMATTER);
+        }
+        return "Jadwal belum diatur";
     }
 
     private Span createProjectStatusBadge(ProjectStatus status) {

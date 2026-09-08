@@ -1,0 +1,22 @@
+3. Filtering Termasuk Subtask
+Task dapat memiliki hierarki (parent–child / subtask).
+Filtering harus mendukung:
+- status task termasuk seluruh subtask di bawahnya
+- pencarian task yang:
+	- match di parent atau
+	- match di subtask
+
+Hasil filtering harus konsisten secara hierarkis:
+- jika subtask match, parent tetap ditampilkan (meskipun parent tidak match).
+
+4. Project Schedule (Non-Intersecting)
+Setiap project memiliki:
+- start_date
+- end_date
+Tidak boleh ada dua project dengan jadwal yang saling beririsan.
+Validasi harus berlaku untuk:
+- create
+- update
+Jika terjadi konflik jadwal:
+- sistem harus menolak perubahan
+- dan memberikan informasi project mana yang menyebabkan konflik.
