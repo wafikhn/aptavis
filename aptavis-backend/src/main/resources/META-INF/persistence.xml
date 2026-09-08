@@ -6,7 +6,7 @@
 
     <persistence-unit name="ProjectTrackerPU" transaction-type="JTA">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-        <jta-data-source>java:jboss/datasources/ProjectTrackerDS</jta-data-source>
+        <jta-data-source>java:app/datasources/ProjectTrackerDS</jta-data-source>
 
         <class>com.aptavis.projecttracker.backend.domain.Project</class>
         <class>com.aptavis.projecttracker.backend.domain.Task</class>

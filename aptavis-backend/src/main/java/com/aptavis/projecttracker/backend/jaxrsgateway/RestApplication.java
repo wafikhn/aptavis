@@ -9,7 +9,7 @@ import jakarta.ws.rs.core.Application;
 import java.util.Set;
 
 @DataSourceDefinition(
-    name = "java:jboss/datasources/ProjectTrackerDS",
+    name = "java:app/datasources/ProjectTrackerDS",
     className = "org.postgresql.ds.PGSimpleDataSource",
     serverName = "dpg-dag1l20n74is73c5227g-a",
     portNumber = 5432,
