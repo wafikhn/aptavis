@@ -12,7 +12,6 @@
 ## 🌐 Live Application Links
 
 - **🎨 Frontend Application (Vaadin Web UI):** [https://aptavis-frontend.onrender.com](https://aptavis-frontend.onrender.com)
-- **⚡ Backend REST API Endpoint:** [https://aptavis.onrender.com/rest/projects](https://aptavis.onrender.com/rest/projects)
 
 ---
 
