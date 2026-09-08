@@ -11,9 +11,9 @@ import java.util.Set;
 @DataSourceDefinition(
     name = "java:jboss/datasources/ProjectTrackerDS",
     className = "org.postgresql.ds.PGSimpleDataSource",
-    url = "jdbc:postgresql://${env.POSTGRES_HOST:dpg-dag1l20n74is73c5227g-a}:5432/${env.POSTGRES_DB:projecttracker}",
-    user = "${env.POSTGRES_USER:postgres}",
-    password = "${env.POSTGRES_PASSWORD:postgres}"
+    url = "jdbc:postgresql://${env.POSTGRES_HOST:dpg-dag1l20n74is73c5227g-a}:5432/${env.POSTGRES_DB:projecttracker_ctuo}",
+    user = "${env.POSTGRES_USER:wafi}",
+    password = "${env.POSTGRES_PASSWORD:5Cu4AG8W66PDP4B4SkNS3xu8zDQ7kXI1}"
 )
 @ApplicationPath("/rest")
 public class RestApplication extends Application {
