@@ -13,4 +13,6 @@ public final class NotificationConstants {
     public static final String NOTIF_TASK_DELETED = "Task berhasil dihapus!";
     public static final String NOTIF_PROJECT_DELETED_SHORT = "Project dihapus!";
     public static final String NOTIF_TASK_DELETED_SHORT = "Task dihapus!";
+    public static final String NOTIF_SAVE_FAILED = "Gagal menyimpan! Periksa koneksi Backend API & Database.";
+    public static final String NOTIF_DELETE_FAILED = "Gagal menghapus! Periksa koneksi Backend API & Database.";
 }

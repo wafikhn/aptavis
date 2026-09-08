@@ -19,17 +19,17 @@ public class ProjectApiClient extends RestEndpoint {
         return post(ApiConstants.ENDPOINT_PROJECTS, projectModel, ProjectModel.class);
     }
 
-    public void deleteProject(Long projectId) {
-        if (projectId == null) return;
-        delete(ApiConstants.ENDPOINT_PROJECTS + "/" + projectId);
+    public boolean deleteProject(Long projectId) {
+        if (projectId == null) return false;
+        return delete(ApiConstants.ENDPOINT_PROJECTS + "/" + projectId);
     }
 
     public TaskModel saveTask(TaskModel taskModel) {
         return post(ApiConstants.ENDPOINT_TASKS, taskModel, TaskModel.class);
     }
 
-    public void deleteTask(Long taskId) {
-        if (taskId == null) return;
-        delete(ApiConstants.ENDPOINT_TASKS + "/" + taskId);
+    public boolean deleteTask(Long taskId) {
+        if (taskId == null) return false;
+        return delete(ApiConstants.ENDPOINT_TASKS + "/" + taskId);
     }
 }

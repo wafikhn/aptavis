@@ -214,9 +214,14 @@ public class ProjectTaskDialog extends Dialog {
                     currentProject.completionProgress(),
                     currentProject.tasks()
             );
-            apiClient.saveProject(projectToSave);
-            Notification n = Notification.show(NotificationConstants.NOTIF_PROJECT_SAVED, 3000, Notification.Position.BOTTOM_END);
-            n.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+            ProjectModel saved = apiClient.saveProject(projectToSave);
+            if (saved != null) {
+                Notification n = Notification.show(NotificationConstants.NOTIF_PROJECT_SAVED, 3000, Notification.Position.BOTTOM_END);
+                n.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+            } else {
+                Notification n = Notification.show(NotificationConstants.NOTIF_SAVE_FAILED, 5000, Notification.Position.BOTTOM_END);
+                n.addThemeVariants(NotificationVariant.LUMO_ERROR);
+            }
         } else {
             ProjectModel selectedProject = projectComboBox.getValue();
             String name = taskNameField.getValue();
@@ -242,9 +247,14 @@ public class ProjectTaskDialog extends Dialog {
                     selectedProject.projectId()
             );
 
-            apiClient.saveTask(taskToSave);
-            Notification n = Notification.show(NotificationConstants.NOTIF_TASK_SAVED, 3000, Notification.Position.BOTTOM_END);
-            n.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+            TaskModel saved = apiClient.saveTask(taskToSave);
+            if (saved != null) {
+                Notification n = Notification.show(NotificationConstants.NOTIF_TASK_SAVED, 3000, Notification.Position.BOTTOM_END);
+                n.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+            } else {
+                Notification n = Notification.show(NotificationConstants.NOTIF_SAVE_FAILED, 5000, Notification.Position.BOTTOM_END);
+                n.addThemeVariants(NotificationVariant.LUMO_ERROR);
+            }
         }
 
         close();
@@ -255,13 +265,23 @@ public class ProjectTaskDialog extends Dialog {
 
     private void delete() {
         if (mode == Mode.PROJECT && currentProject != null && currentProject.projectId() != null) {
-            apiClient.deleteProject(currentProject.projectId());
-            Notification n = Notification.show(NotificationConstants.NOTIF_PROJECT_DELETED, 3000, Notification.Position.BOTTOM_END);
-            n.addThemeVariants(NotificationVariant.LUMO_PRIMARY);
+            boolean deleted = apiClient.deleteProject(currentProject.projectId());
+            if (deleted) {
+                Notification n = Notification.show(NotificationConstants.NOTIF_PROJECT_DELETED, 3000, Notification.Position.BOTTOM_END);
+                n.addThemeVariants(NotificationVariant.LUMO_PRIMARY);
+            } else {
+                Notification n = Notification.show(NotificationConstants.NOTIF_DELETE_FAILED, 5000, Notification.Position.BOTTOM_END);
+                n.addThemeVariants(NotificationVariant.LUMO_ERROR);
+            }
         } else if (mode == Mode.TASK && currentTask != null && currentTask.taskId() != null) {
-            apiClient.deleteTask(currentTask.taskId());
-            Notification n = Notification.show(NotificationConstants.NOTIF_TASK_DELETED, 3000, Notification.Position.BOTTOM_END);
-            n.addThemeVariants(NotificationVariant.LUMO_PRIMARY);
+            boolean deleted = apiClient.deleteTask(currentTask.taskId());
+            if (deleted) {
+                Notification n = Notification.show(NotificationConstants.NOTIF_TASK_DELETED, 3000, Notification.Position.BOTTOM_END);
+                n.addThemeVariants(NotificationVariant.LUMO_PRIMARY);
+            } else {
+                Notification n = Notification.show(NotificationConstants.NOTIF_DELETE_FAILED, 5000, Notification.Position.BOTTOM_END);
+                n.addThemeVariants(NotificationVariant.LUMO_ERROR);
+            }
         }
 
         close();
