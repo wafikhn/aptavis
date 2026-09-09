@@ -152,27 +152,26 @@ public class MainView extends VerticalLayout {
     }
 
     private boolean matchesProjectOrTasks(ProjectModel p, String query, TaskStatus statusFilter) {
-        boolean nameMatch = query == null || (p.name() != null && p.name().toLowerCase().contains(query));
-        boolean taskMatch = p.tasks() != null && p.tasks().stream().anyMatch(t -> matchesTaskOrSubtasks(t, query, statusFilter));
-        return nameMatch || taskMatch;
-    }
-
-    private boolean matchesTaskOrSubtasks(TaskModel task, String query, TaskStatus statusFilter) {
-        boolean nameMatches = (query == null) || (task.name() != null && task.name().toLowerCase().contains(query));
-        boolean statusMatches = (statusFilter == null) || (task.status() == statusFilter);
-        boolean selfMatches = nameMatches && statusMatches;
-
-        boolean subtaskMatches = task.subtasks() != null && task.subtasks().stream()
-                .anyMatch(sub -> matchesTaskOrSubtasks(sub, query, statusFilter));
-
-        return selfMatches || subtaskMatches;
+        boolean nameMatch = query != null && p.name() != null && p.name().toLowerCase().contains(query);
+        if (nameMatch) {
+            return true;
+        }
+        return p.tasks() != null && p.tasks().stream().anyMatch(t -> filterTaskTree(t, query, statusFilter, false) != null);
     }
 
     private ProjectModel filterProjectTasksHierarchically(ProjectModel project, String query, TaskStatus statusFilter) {
         if (project.tasks() == null) return project;
-        List<TaskModel> filteredTasks = project.tasks().stream()
-                .filter(t -> matchesTaskOrSubtasks(t, query, statusFilter))
-                .collect(Collectors.toList());
+        boolean projectNameMatches = query != null && project.name() != null && project.name().toLowerCase().contains(query);
+        String taskQuery = projectNameMatches ? null : query;
+
+        java.util.List<TaskModel> filteredTasks = new java.util.ArrayList<>();
+        for (TaskModel t : project.tasks()) {
+            TaskModel filtered = filterTaskTree(t, taskQuery, statusFilter, false);
+            if (filtered != null) {
+                filteredTasks.add(filtered);
+            }
+        }
+
         return new ProjectModel(
                 project.projectId(),
                 project.name(),
@@ -182,5 +181,36 @@ public class MainView extends VerticalLayout {
                 project.endDate(),
                 filteredTasks
         );
+    }
+
+    private TaskModel filterTaskTree(TaskModel task, String query, TaskStatus statusFilter, boolean parentAlreadyMatched) {
+        boolean nameMatches = (query == null) || (task.name() != null && task.name().toLowerCase().contains(query));
+        boolean statusMatches = (statusFilter == null) || (task.status() == statusFilter);
+        boolean selfMatches = nameMatches && statusMatches;
+
+        boolean isMatched = parentAlreadyMatched || selfMatches;
+
+        java.util.List<TaskModel> filteredSubtasks = new java.util.ArrayList<>();
+        if (task.subtasks() != null) {
+            for (TaskModel sub : task.subtasks()) {
+                TaskModel filteredSub = filterTaskTree(sub, query, statusFilter, isMatched);
+                if (filteredSub != null) {
+                    filteredSubtasks.add(filteredSub);
+                }
+            }
+        }
+
+        if (isMatched || !filteredSubtasks.isEmpty()) {
+            return new TaskModel(
+                    task.taskId(),
+                    task.name(),
+                    task.status(),
+                    task.weight(),
+                    task.projectId(),
+                    task.parentTaskId(),
+                    filteredSubtasks
+            );
+        }
+        return null;
     }
 }
